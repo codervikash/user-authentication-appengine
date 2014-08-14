@@ -246,12 +246,16 @@ class LoginHandler(BaseHandler):
 
   def _serve_page(self, failed=False):
     username = self.request.get('username')
-    params = {
-      'username': username,
-      'failed': failed
-    }
-    self.render_template('login.html', params)
+    if failed is True :
+        params = {
+            'username': username,
+            'failed': failed
+        }
+        self.render_template('login.html', params)
 
+    else :
+        self.redirect(self.uri_for('authenticated'))
+        
 class LogoutHandler(BaseHandler):
   def get(self):
     self.auth.unset_session()
@@ -263,14 +267,15 @@ class AuthenticatedHandler(BaseHandler):
     self.render_template('dashboard.html')
 
 config = {
-    'webapp2_extras.auth' : {
+    'webapp2_extras.auth': {
         'user_model': 'models.User',
         'user_attributes': ['name']
     },
-    'webapp2_extras.sessions': {
+        'webapp2_extras.sessions': {
         'secret_key': 'YOUR_SECRET_KEY'
     }
 }
+
 app = webapp2.WSGIApplication([
     webapp2.Route('/', LoginHandler, name='login'),
     webapp2.Route('/signup', SignupHandler),
