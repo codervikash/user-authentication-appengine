@@ -12,6 +12,7 @@ from webapp2_extras import sessions
 
 from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
+from google.appengine.api import mail
 
 def user_required(handler):
   """
@@ -128,10 +129,17 @@ class SignupHandler(BaseHandler):
     verification_url = self.uri_for('verification', type='v', user_id=user_id,
       signup_token=token, _full=True)
 
-    msg = 'Send an email to user in order to verify their address. \
-          They will be able to do so by visiting <a href="{url}">{url}</a>'
+
+    msg = 'Thanks for signing up. Check your mail to verify account!'
 
     self.display_message(msg.format(url=verification_url))
+
+    mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
+              to=email,
+              subject="Approve your account",
+              body="""
+              Hey!! Thanks for registering.
+              Complete your registration <button><a href=%s>Register</a></button>""" % verification_url)
 
 class ForgotPasswordHandler(BaseHandler):
   def get(self):
@@ -246,15 +254,15 @@ class LoginHandler(BaseHandler):
 
   def _serve_page(self, failed=False):
     username = self.request.get('username')
-    if failed is True :
-        params = {
-            'username': username,
-            'failed': failed
-        }
-        self.render_template('login.html', params)
-
-    else :
-        self.redirect(self.uri_for('authenticated'))
+    auth = self.auth
+    if not auth.get_user_by_session():
+      params = {
+        'username': username,
+        'failed': failed
+      }
+      self.render_template('login.html', params)
+    else:
+      self.redirect(self.uri_for('authenticated'))
         
 class LogoutHandler(BaseHandler):
   def get(self):
