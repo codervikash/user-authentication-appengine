@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+
+{% block maincontent %}
+
+<h1>Login</h1>
+
+{% if failed %}
+
+    <strong>Login failed!</strong> Check your credentials and try again.
+
+{% endif %}
+<div class="row">
+<div class="col-lg-4 col md-6 col-sm-12">
+
+	<form class="form-horizontal" role="form" action= "/" method="POST">
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Username</label>
+    <div class="col-sm-10">
+      <input type="username" class="form-control" id="inputEmail3" placeholder="username">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">Sign in</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div>
+        <label>
+          <a href="/forget">Forget pasword</a>
+        </label>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+
+
+{% endblock %}
