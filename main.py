@@ -262,8 +262,6 @@ class AuthenticatedHandler(BaseHandler):
   def get(self):
     self.render_template('dashboard.html')
 
-  def post(self):
-
 config = {
   'webapp2_extras.auth': {
     'user_model': 'models.User',
