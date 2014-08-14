@@ -263,15 +263,14 @@ class AuthenticatedHandler(BaseHandler):
     self.render_template('dashboard.html')
 
 config = {
-  'webapp2_extras.auth': {
-    'user_model': 'models.User',
-    'user_attributes': ['name']
-  },
-  'webapp2_extras.sessions': {
-    'secret_key': 'YOUR_SECRET_KEY'
-  }
+    'webapp2_extras.auth' : {
+        'user_model': 'models.User',
+        'user_attributes': ['name']
+    },
+    'webapp2_extras.sessions': {
+        'secret_key': 'YOUR_SECRET_KEY'
+    }
 }
-
 app = webapp2.WSGIApplication([
     webapp2.Route('/', LoginHandler, name='login'),
     webapp2.Route('/signup', SignupHandler),
