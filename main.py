@@ -139,7 +139,7 @@ class SignupHandler(BaseHandler):
               subject="Approve your account",
               body="""
               Hey!! Thanks for registering.
-              Complete your registration <button><a href=%s>Register</a></button>""" % verification_url)
+              Complete your registration %s """ % verification_url)
 
 class ForgotPasswordHandler(BaseHandler):
   def get(self):
@@ -203,7 +203,7 @@ class VerificationHandler(BaseHandler):
       if not user.verified:
         user.verified = True
         user.put()
-      
+
       self.display_message('User email address has been verified.')
       return
     elif verification_type == 'p':
@@ -247,8 +247,11 @@ class LoginHandler(BaseHandler):
     try:
       u = self.auth.get_user_by_password(username, password, remember=True,
         save_session=True)
-      self.redirect(self.uri_for('authenticated'))
-    except (InvalidAuthIdError, InvalidPasswordError) as e:
+      if u.verified is true
+        self.redirect(self.uri_for('authenticated'))
+      else 
+        self.redirect(self.uri_for('login'))
+    except (InvalidAuthIdError, InvalidPasswordError, UnverifiedError) as e:
       logging.info('Login failed for user %s because of %s', username, type(e))
       self._serve_page(True)
 
