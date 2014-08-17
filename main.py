@@ -131,16 +131,19 @@ class SignupHandler(BaseHandler):
       signup_token=token, _full=True)
 
 
-    msg = 'Thanks for signing up. Check your mail to verify account!'
-
-    self.display_message(msg)
-
     mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
               to=email,
               subject="Approve your account",
               body="""
               Hey!! Thanks for registering.
               Complete your registration %s """ % verification_url)
+
+    message = 'Thanks for signing up. Check your mail to verify account!'
+
+    params = {
+      'message' : message
+    }
+    self.render_template('login.html',params)
 
 class ForgotPasswordHandler(BaseHandler):
   def get(self):
@@ -254,7 +257,7 @@ class LoginHandler(BaseHandler):
         message = 'Email ID not veridfied, Please contact admin'
         self._serve_page(message,True)
       else:
-        self.redirect(self.uri_for('xgfjgfp'))
+        self.redirect(self.uri_for('authenticated'))
     except (InvalidAuthIdError, InvalidPasswordError) as e:
       logging.info('Login failed for user %s because of %s', username, type(e))
       message = 'Invalid password'
