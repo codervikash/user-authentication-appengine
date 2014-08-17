@@ -130,13 +130,21 @@ class SignupHandler(BaseHandler):
     verification_url = self.uri_for('verification', type='v', user_id=user_id,
       signup_token=token, _full=True)
 
+    email_id = 'it@hindustanuniv.ac.in'
 
     mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
               to=email,
-              subject="Approve your account",
+              subject="Approve account",
               body="""
-              Hey!! Thanks for registering.
-              Complete your registration %s """ % verification_url)
+              Respected Sir/Mam,
+               %s has registered to access software database.
+              Details are as follows:
+              Name : %s
+              Email Id : %s
+              If its authorised, Please click on link below.
+               %s 
+
+               Else, please reply back to this mail with details.""" % name, name, email, verification_url)
 
     message = 'Thanks for signing up. Check your mail to verify account!'
 
@@ -208,7 +216,7 @@ class VerificationHandler(BaseHandler):
         user.verified = True
         user.put()
 
-      self.display_message('User email address has been verified.')
+      self.display_message('User email address has been verified. Please login to access dashboard')
       return
     elif verification_type == 'p':
       # supply user to the page
@@ -263,7 +271,7 @@ class LoginHandler(BaseHandler):
       message = 'Invalid password'
       self._serve_page( message,True)
 
-  def _serve_page(self, message= 'Sucess', failed=False):
+  def _serve_page(self, message= False, failed=False):
     username = self.request.get('username')
     auth = self.auth
     if not auth.get_user_by_session():
