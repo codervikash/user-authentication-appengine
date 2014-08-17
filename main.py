@@ -112,46 +112,55 @@ class SignupHandler(BaseHandler):
     password = self.request.get('password')
     last_name = self.request.get('lastname')
 
-    unique_properties = ['email_address']
-    user_data = self.user_model.create_user(user_name,
-      unique_properties,
-      email_address=email, name=name, password_raw=password,
-      last_name=last_name, verified=False)
-    if not user_data[0]: #user_data is a tuple
-      self.display_message('Unable to create user for email %s because of \
-        duplicate keys %s' % (user_name, user_data[1]))
-      return
+    if not password or password != self.request.get('confirm_password'):
+      params = {
+        'message' : 'Password dont match'
+      }
+      self.render_template('signup.html',params)
+    else:
+      unique_properties = ['email_address']
+      user_data = self.user_model.create_user(user_name,
+        unique_properties,
+        email_address=email, name=name, password_raw=password,
+        last_name=last_name, verified=False)
+      if not user_data[0]: #user_data is a tuple
+        message = 'Username/email already exists. please login or choose different username/email.'
+        params = {
+          'message' : message
+        }
+        self.render_template('signup.html',params)
+        return
     
-    user = user_data[1]
-    user_id = user.get_id()
+      user = user_data[1]
+      user_id = user.get_id()
 
-    token = self.user_model.create_signup_token(user_id)
+      token = self.user_model.create_signup_token(user_id)
 
-    verification_url = self.uri_for('verification', type='v', user_id=user_id,
-      signup_token=token, _full=True)
+      verification_url = self.uri_for('verification', type='v', user_id=user_id,
+        signup_token=token, _full=True)
 
-    email_id = 'it@hindustanuniv.ac.in'
+      email_id = 'it@hindustanuniv.ac.in'
 
-    mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
-              to=email,
-              subject="Approve account",
-              body="""
+      mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
+                to=email,
+                subject="Approve account",
+                body="""
               Respected Sir/Mam,
-               %s has registered to access software database.
+              Following user has registered to access software database.
               Details are as follows:
               Name : %s
               Email Id : %s
               If its authorised, Please click on link below.
                %s 
 
-               Else, please reply back to this mail with details.""" % name, name, email, verification_url)
+               Else, please reply back to this mail with details.""" % (name, email, verification_url))
 
-    message = 'Thanks for signing up. Check your mail to verify account!'
+      message = 'Thanks for signing up. Please contact admin to verify account!'
 
-    params = {
-      'message' : message
-    }
-    self.render_template('login.html',params)
+      params = {
+        'message' : message
+      }
+      self.render_template('login.html',params)
 
 class ForgotPasswordHandler(BaseHandler):
   def get(self):
@@ -159,6 +168,7 @@ class ForgotPasswordHandler(BaseHandler):
 
   def post(self):
     username = self.request.get('username')
+    email = self.request.get('email')
 
     user = self.user_model.get_by_auth_id(username)
     if not user:
@@ -172,10 +182,25 @@ class ForgotPasswordHandler(BaseHandler):
     verification_url = self.uri_for('verification', type='p', user_id=user_id,
       signup_token=token, _full=True)
 
-    msg = 'Send an email to user in order to reset their password. \
-          They will be able to do so by visiting <a href="{url}">{url}</a>'
+    mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
+                to=email,
+                subject="Password Change",
+                body="""
+              Respected Sir/Mam,
+              You requested for changing your account password.
+              If its you, Please click on link below.
+               %s 
 
-    self.display_message(msg.format(url=verification_url))
+               Else, please reply back to this mail with details.""" %  verification_url)
+
+    params = {
+      'message' : 'Check mail to verify password change and login again.'
+    }
+
+    self.render_template('login.html',params)
+
+
+
   
   def _serve_page(self, not_found=False):
     username = self.request.get('username')
@@ -246,8 +271,14 @@ class SetPasswordHandler(BaseHandler):
 
     # remove signup token, we don't want users to come back with an old link
     self.user_model.delete_signup_token(user.get_id(), old_token)
+    self.auth.unset_session()
     
-    self.display_message('Password updated')
+    params = {
+      'message' : 'Password Updated ! Login with new password.'
+    }
+    self.render_template('login.html',params)
+
+
 
 class LoginHandler(BaseHandler):
   def get(self):
