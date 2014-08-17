@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 from google.appengine.ext.webapp import template
@@ -132,7 +133,7 @@ class SignupHandler(BaseHandler):
 
     msg = 'Thanks for signing up. Check your mail to verify account!'
 
-    self.display_message(msg.format(url=verification_url))
+    self.display_message(msg)
 
     mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
               to=email,
@@ -245,23 +246,28 @@ class LoginHandler(BaseHandler):
     username = self.request.get('username')
     password = self.request.get('password')
     try:
-      u = self.auth.get_user_by_password(username, password, remember=True,
+      u = self.auth.get_user_by_password(username, password,  remember=True,
         save_session=True)
-      if u.verified is true
-        self.redirect(self.uri_for('authenticated'))
-      else 
-        self.redirect(self.uri_for('login'))
-    except (InvalidAuthIdError, InvalidPasswordError, UnverifiedError) as e:
+      v = self.user_model.get_by_auth_id(username)
+      if v.verified is False:
+        self.auth.unset_session()
+        message = 'Email ID not veridfied, Please contact admin'
+        self._serve_page(message,True)
+      else:
+        self.redirect(self.uri_for('xgfjgfp'))
+    except (InvalidAuthIdError, InvalidPasswordError) as e:
       logging.info('Login failed for user %s because of %s', username, type(e))
-      self._serve_page(True)
+      message = 'Invalid password'
+      self._serve_page( message,True)
 
-  def _serve_page(self, failed=False):
+  def _serve_page(self, message= 'Sucess', failed=False):
     username = self.request.get('username')
     auth = self.auth
     if not auth.get_user_by_session():
       params = {
         'username': username,
-        'failed': failed
+        'failed': failed,
+        'message' : message
       }
       self.render_template('login.html', params)
     else:
