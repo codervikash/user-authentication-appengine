@@ -203,9 +203,7 @@ class ForgotPasswordHandler(BaseHandler):
 
   
   def _serve_page(self, not_found=False):
-    username = self.request.get('username')
     params = {
-      'username': username,
       'not_found': not_found
     }
     self.render_template('forgot.html', params)
@@ -255,6 +253,8 @@ class VerificationHandler(BaseHandler):
       self.abort(404)
 
 class SetPasswordHandler(BaseHandler):
+  def get(self):
+    self.redirect('/')
 
   @user_required
   def post(self):
