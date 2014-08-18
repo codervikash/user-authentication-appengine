@@ -111,6 +111,7 @@ class SignupHandler(BaseHandler):
     name = self.request.get('name')
     password = self.request.get('password')
     last_name = self.request.get('lastname')
+    typef = self.request.get('type')
 
     if not password or password != self.request.get('confirm_password'):
       params = {
@@ -122,7 +123,7 @@ class SignupHandler(BaseHandler):
       user_data = self.user_model.create_user(user_name,
         unique_properties,
         email_address=email, name=name, password_raw=password,
-        last_name=last_name, verified=False)
+        last_name=last_name, type=typef, verified=False)
       if not user_data[0]: #user_data is a tuple
         message = 'Username/email already exists. please login or choose different username/email.'
         params = {
@@ -320,10 +321,23 @@ class LogoutHandler(BaseHandler):
     self.auth.unset_session()
     self.redirect(self.uri_for('login'))
 
+
 class AuthenticatedHandler(BaseHandler):
   @user_required
   def get(self):
     self.render_template('dashboard.html')
+
+  def post(self):
+    self.request.get('')
+    self.request.get('')
+    self.request.get('')
+    self.request.get('')
+    self.request.get('')
+    self.request.get('')
+    self.request.get('')
+    self.request.get('')
+    self.request.get('')
+
 
 config = {
     'webapp2_extras.auth': {

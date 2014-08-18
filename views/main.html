@@ -14,7 +14,52 @@
   </head>
 
   <body>
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Software-db</a>
+    </div>
 
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    {% if user %}
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Software details</a></li>
+            <li><a href="#">Training details</a></li>
+            <li><a href="#">Software uses</a></li>
+          </ul>
+        </li>
+         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">View/Querry <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Software details</a></li>
+            <li><a href="#">Training details</a></li>
+            <li><a href="#">Software uses</a></li>
+          </ul>
+        </li>
+    {% endif %}
+      
+      
+      <p class="navbar-text navbar-right">
+        {% if not user %}
+          <a href="/signup">Sign Up</a>
+        {% else %}
+          Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
+        {% endif %}
+      </p>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
   <div class="content">
     {% block maincontent %}
 
@@ -23,17 +68,11 @@
 
 
     <nav class="navbar-fixed-bottom" role="navigation">
-      <hr/>
-      <p>
-        {% if not user %}
-          <a href="/signup">Sign Up</a>
-        {% else %}
-          Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
-        {% endif %}
+        
         <p class="copy">&copy;<a href="http://vikashkumar.me">Vikash Kumar</a></p>
-      </p>
+    
       </nav>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
