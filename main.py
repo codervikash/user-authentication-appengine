@@ -136,7 +136,7 @@ class SignupHandler(BaseHandler):
       email_id = 'csharmila@hindustanuniv.ac.in'
 
       mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
-                to=email_id,
+                to=email,
                 subject="Approve account",
                 body="""
               Respected Sir/Mam,
@@ -144,10 +144,11 @@ class SignupHandler(BaseHandler):
               Details are as follows:
               Name : %s
               Email Id : %s
+              Type : %s
               If its authorised, Please click on link below.
                %s 
 
-               Else, please reply back to this mail with details.""" % (name, email, verification_url))
+               Else, please reply back to this mail with details.""" % (name, email, typef, verification_url))
 
       message = 'Thanks for signing up. Please contact admin to verify account!'
 
