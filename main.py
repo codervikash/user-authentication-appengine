@@ -81,13 +81,6 @@ class BaseHandler(webapp2.RequestHandler):
     path = os.path.join(os.path.dirname(__file__), 'views', view_filename)
     self.response.out.write(template.render(path, params))
 
-  def display_message(self, message):
-    """Utility function to display a template with a simple message."""
-    params = {
-      'message': message
-    }
-    self.render_template('message.html', params)
-
   # this is needed for webapp2 sessions to work
   def dispatch(self):
       # Get a session store for this request.
@@ -140,10 +133,10 @@ class SignupHandler(BaseHandler):
       verification_url = self.uri_for('verification', type='v', user_id=user_id,
         signup_token=token, _full=True)
 
-      email_id = 'it@hindustanuniv.ac.in'
+      email_id = 'csharmila@hindustanuniv.ac.in'
 
       mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
-                to=email,
+                to=email_id,
                 subject="Approve account",
                 body="""
               Respected Sir/Mam,
@@ -240,8 +233,13 @@ class VerificationHandler(BaseHandler):
         user.verified = True
         user.put()
 
-      self.display_message('User email address has been verified. Please login to access dashboard')
+      params = {
+        'message': 'User email address has been verified. Please login to access dashboard'
+      }
+
+      self.render_template('login.html', params)
       return
+
     elif verification_type == 'p':
       # supply user to the page
       params = {
@@ -296,8 +294,10 @@ class LoginHandler(BaseHandler):
         self.auth.unset_session()
         message = 'Email ID not veridfied, Please contact admin'
         self._serve_page(message,True)
-      else:
+      elif v.type is admin:
         self.redirect(self.uri_for('authenticated'))
+      else :
+        self.redirect(self.uri_for('query'))
     except (InvalidAuthIdError, InvalidPasswordError) as e:
       logging.info('Login failed for user %s because of %s', username, type(e))
       message = 'Invalid password'
@@ -327,7 +327,7 @@ class AuthenticatedHandler(BaseHandler):
   def get(self):
     self.render_template('dashboard.html')
 
-class UpdateHandler(BaseHandler):
+class QueryHandler(BaseHandler):
   @user_required
   def get(self, *args, **kwargs):
     tipe = kwargs['type']
@@ -348,6 +348,25 @@ class UpdateHandler(BaseHandler):
       self.render_template('update.html',params)
 
 
+class UpdateHandler(BaseHandler):
+  @user_required
+  def get(self, *args, **kwargs):
+    tipe = kwargs['type']
+    if tipe == 'software':
+      params = {
+        'software' : True
+      } 
+      self.render_template('query.html',params)
+    elif tipe == 'training':
+      params = {
+        'training' : True
+      }
+      self.render_template('query.html',params)
+    elif tipe == 'use':
+      params = {
+       'Use': True
+      }
+      self.render_template('query.html',params)
 
 
 
@@ -371,8 +390,8 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/logout', LogoutHandler, name='logout'),
     webapp2.Route('/forgot', ForgotPasswordHandler, name='forgot'),
     webapp2.Route('/dashboard', AuthenticatedHandler, name='authenticated'),
-    webapp2.Route('/update/<type:software|training|use>', handler=UpdateHandler, name='update')
-    #webapp2.Route('/query/<type:software|training|use>', handler=QueryHandler, name='query')
+    webapp2.Route('/update/<type:software|training|use>', handler=UpdateHandler, name='update'),
+    webapp2.Route('/query/<type:software|training|use>', handler=QueryHandler, name='query')
 ], debug=True, config=config)
 
 logging.getLogger().setLevel(logging.DEBUG)
