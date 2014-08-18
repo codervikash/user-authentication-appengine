@@ -35,3 +35,21 @@ class User(webapp2_extras.appengine.auth.models.User):
         return user, timestamp
 
     return None, None
+
+class Software(ndb.Model):
+    sno = ndb.IntegerProperty()
+    lname = ndb.StringProperty()
+    sname = ndb.StringProperty()
+    vname = ndb.StringProperty()
+    scost = ndb.IntegerProperty()
+    lno = ndb.IntegerProperty()
+    ltype = ndb.StringProperty()
+    nolic = ndb.IntegerProperty()
+    date = ndb.DateProperty()
+    exdate = ndb.DateProperty()
+    prew = ndb.DateProperty()
+    upgraded = ndb.StringProperty()
+    upver = ndb.StringProperty()
+    update = ndb.DateProperty()
+    upcost = ndb.IntegerProperty()
+    upval = ndb.StringProperty()

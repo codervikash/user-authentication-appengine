@@ -327,26 +327,39 @@ class AuthenticatedHandler(BaseHandler):
   def get(self):
     self.render_template('dashboard.html')
 
-  def post(self):
-    self.request.get('')
-    self.request.get('')
-    self.request.get('')
-    self.request.get('')
-    self.request.get('')
-    self.request.get('')
-    self.request.get('')
-    self.request.get('')
-    self.request.get('')
+class UpdateHandler(BaseHandler):
+  @user_required
+  def get(self, *args, **kwargs):
+    tipe = kwargs['type']
+    if tipe == 'software':
+      params = {
+        'software' : True
+      } 
+      self.render_template('update.html',params)
+    elif tipe == 'training':
+      params = {
+        'training' : True
+      }
+      self.render_template('update.html',params)
+    elif tipe == 'use':
+      params = {
+       'Use': True
+      }
+      self.render_template('update.html',params)
+
+
+
 
 
 config = {
-    'webapp2_extras.auth': {
-        'user_model': 'models.User',
-        'user_attributes': ['name']
-    },
-        'webapp2_extras.sessions': {
-        'secret_key': 'YOUR_SECRET_KEY'
-    }
+  'webapp2_extras.auth': {
+    'user_model': 'models.User',
+    'update_sofware': 'models.Software',
+    'user_attributes': ['name']
+  },
+  'webapp2_extras.sessions': {
+    'secret_key': 'YOUR_SECRET_KEY'
+  }
 }
 
 app = webapp2.WSGIApplication([
@@ -357,7 +370,9 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/password', SetPasswordHandler),
     webapp2.Route('/logout', LogoutHandler, name='logout'),
     webapp2.Route('/forgot', ForgotPasswordHandler, name='forgot'),
-    webapp2.Route('/dashboard', AuthenticatedHandler, name='authenticated')
+    webapp2.Route('/dashboard', AuthenticatedHandler, name='authenticated'),
+    webapp2.Route('/update/<type:software|training|use>', handler=UpdateHandler, name='update')
+    #webapp2.Route('/query/<type:software|training|use>', handler=QueryHandler, name='query')
 ], debug=True, config=config)
 
 logging.getLogger().setLevel(logging.DEBUG)

@@ -1,0 +1,109 @@
+{% extends "main.html" %}
+
+{% block maincontent %}
+{% if software %}
+
+	<div class="row">
+<div class="col-lg-8 col md-10 col-sm-12">
+
+	<form class="form-horizontal" role="form" action="/update/software" method="POST">
+	<div class="form-group">
+    <label for="sno" class="col-sm-2 control-label">S. No.:</label>
+    <div class=" col-lg-5 col-sm-10">
+      <input type="no" class="form-control" id="sno" placeholder="Eg: John" name="sno">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="lastname" class="col-sm-2 control-label">Enter Last Name:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="name" class="form-control" id="lastname" placeholder="Eg: Williams" name="latname">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="username" class="col-sm-2 control-label">Choose Username:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="username" class="form-control" id="username" placeholder="Eg: @john" name="username">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="email" class="col-sm-2 control-label">Enter Email Id:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="email" class="form-control" id="email" placeholder="Eg: abc@example.com" name="email">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Password:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Password" name="password">
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Confirm Password:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Re enter Password" name="confirm_password">
+    </div>
+    {% endif %}
+  {% if training %}
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" value="Create user" class="btn btn-default">Sign Up!</button>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+
+	<div class="row">
+<div class="col-lg-8 col md-10 col-sm-12">
+
+	<form class="form-horizontal" role="form" action="/signup" method="POST">
+	<div class="form-group">
+    <label for="firstname" class="col-sm-2 control-label">Enter First Name:</label>
+    <div class=" col-lg-5 col-sm-10">
+      <input type="name" class="form-control" id="firstname" placeholder="Eg: John" name="name">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="lastname" class="col-sm-2 control-label">Enter Last Name:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="name" class="form-control" id="lastname" placeholder="Eg: Williams" name="latname">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="username" class="col-sm-2 control-label">Choose Username:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="username" class="form-control" id="username" placeholder="Eg: @john" name="username">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="email" class="col-sm-2 control-label">Enter Email Id:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="email" class="form-control" id="email" placeholder="Eg: abc@example.com" name="email">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Password:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Password" name="password">
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Confirm Password:</label>
+    <div class="col-lg-5 col-sm-10">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Re enter Password" name="confirm_password">
+    </div>
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" value="Create user" class="btn btn-default">Sign Up!</button>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+{% endif %}
+{% if use %}
+
+{% endif %}
+
+{% endblock %}
