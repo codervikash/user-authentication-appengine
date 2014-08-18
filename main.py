@@ -136,7 +136,7 @@ class SignupHandler(BaseHandler):
       email_id = 'csharmila@hindustanuniv.ac.in'
 
       mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
-                to=email,
+                to=email_id,
                 subject="Approve account",
                 body="""
               Respected Sir/Mam,
@@ -295,10 +295,11 @@ class LoginHandler(BaseHandler):
         self.auth.unset_session()
         message = 'Email ID not veridfied, Please contact admin'
         self._serve_page(message,True)
-      elif v.type is admin:
+        return
+      elif v.type is 'admin':
         self.redirect(self.uri_for('authenticated'))
       else :
-        self.redirect(self.uri_for('query'))
+        self.redirect('query/software')
     except (InvalidAuthIdError, InvalidPasswordError) as e:
       logging.info('Login failed for user %s because of %s', username, type(e))
       message = 'Invalid password'
