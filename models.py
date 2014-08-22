@@ -53,3 +53,26 @@ class Software(ndb.Model):
     update = ndb.DateProperty()
     upcost = ndb.IntegerProperty()
     upval = ndb.StringProperty()
+
+class Training(ndb.model):
+    sno = ndb.IntegerProperty()
+    dtrn = ndb.DateProperty()
+    lname = ndb.StringProperty()
+    sused = ndb.StringProperty()
+    staff = ndb.StringProperty()
+    desig = ndb.StringProperty()
+    comp = ndb.StringProperty()
+    resper = ndb.StringProperty()
+    cost = ndb.StringProperty()
+
+class Use(ndb.Model):
+    sno = ndb.IntegerProperty()
+    lname = ndb.StringProperty()
+    sname = ndb.StringProperty()
+    desc = ndb.StringProperty()
+    utility = ndb.StringProperty()
+    course = ndb.StringProperty()
+    pcourse = ndb.StringProperty()
+    dcon = ndb.StringProperty()
+    opp = ndb.StringProperty()
+    
