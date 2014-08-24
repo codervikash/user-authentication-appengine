@@ -358,17 +358,17 @@ class UpdateHandler(BaseHandler):
       params = {
         'software' : True
       } 
-      self.render_template('query.html',params)
+      self.render_template('update.html',params)
     elif tipe == 'training':
       params = {
         'training' : True
       }
-      self.render_template('query.html',params)
+      self.render_template('update.html',params)
     elif tipe == 'use':
       params = {
        'Use': True
       }
-      self.render_template('query.html',params)
+      self.render_template('update.html',params)
 
 
 

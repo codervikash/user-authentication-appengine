@@ -48,13 +48,14 @@ class Software(ndb.Model):
     date = ndb.DateProperty()
     exdate = ndb.DateProperty()
     prew = ndb.DateProperty()
+    req = ndb.StringProperty()
     upgraded = ndb.StringProperty()
     upver = ndb.StringProperty()
     update = ndb.DateProperty()
     upcost = ndb.IntegerProperty()
     upval = ndb.StringProperty()
 
-class Training(ndb.model):
+class Training(ndb.Model):
     sno = ndb.IntegerProperty()
     dtrn = ndb.DateProperty()
     lname = ndb.StringProperty()
