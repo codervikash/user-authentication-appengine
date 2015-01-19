@@ -1,6 +1,3 @@
-
-#!/usr/bin/env python
-
 from google.appengine.ext.webapp import template
 from google.appengine.ext import ndb
 
@@ -65,7 +62,7 @@ class BaseHandler(webapp2.RequestHandler):
     """Returns the implementation of the user model.
 
     It is consistent with config['webapp2_extras.auth']['user_model'], if set.
-    """    
+    """
     return self.auth.store.user_model
 
   @webapp2.cached_property
@@ -104,7 +101,6 @@ class SignupHandler(BaseHandler):
     name = self.request.get('name')
     password = self.request.get('password')
     last_name = self.request.get('lastname')
-    typef = self.request.get('type')
 
     if not password or password != self.request.get('confirm_password'):
       params = {
@@ -116,7 +112,7 @@ class SignupHandler(BaseHandler):
       user_data = self.user_model.create_user(user_name,
         unique_properties,
         email_address=email, name=name, password_raw=password,
-        last_name=last_name, type=typef, verified=False)
+        last_name=last_name, verified=False)
       if not user_data[0]: #user_data is a tuple
         message = 'Username/email already exists. please login or choose different username/email.'
         params = {
@@ -124,7 +120,7 @@ class SignupHandler(BaseHandler):
         }
         self.render_template('signup.html',params)
         return
-    
+
       user = user_data[1]
       user_id = user.get_id()
 
@@ -133,20 +129,19 @@ class SignupHandler(BaseHandler):
       verification_url = self.uri_for('verification', type='v', user_id=user_id,
         signup_token=token, _full=True)
 
-      email_id = 'csharmila@hindustanuniv.ac.in'
+      email_id = email
 
       mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
                 to=email_id,
                 subject="Approve account",
                 body="""
               Respected Sir/Mam,
-              Following user has registered to access software database.
-              Details are as follows:
+              Your sign up details are as follows:
               Name : %s
               Email Id : %s
               Type : %s
               If its authorised, Please click on link below.
-               %s 
+               %s
 
                Else, please reply back to this mail with details.""" % (name, email, typef, verification_url))
 
@@ -177,14 +172,14 @@ class ForgotPasswordHandler(BaseHandler):
     verification_url = self.uri_for('verification', type='p', user_id=user_id,
       signup_token=token, _full=True)
 
-    mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
+    mail.send_mail(sender="Admin ID <xyz@example.com>",
                 to=email,
                 subject="Password Change",
                 body="""
               Respected Sir/Mam,
               You requested for changing your account password.
               If its you, Please click on link below.
-               %s 
+               %s
 
                Else, please reply back to this mail with details.""" %  verification_url)
 
@@ -196,7 +191,7 @@ class ForgotPasswordHandler(BaseHandler):
 
 
 
-  
+
   def _serve_page(self, not_found=False):
     params = {
       'not_found': not_found
@@ -222,7 +217,7 @@ class VerificationHandler(BaseHandler):
       logging.info('Could not find any user with id "%s" signup token "%s"',
         user_id, signup_token)
       self.abort(404)
-    
+
     # store user data in the session
     self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
@@ -272,7 +267,7 @@ class SetPasswordHandler(BaseHandler):
     # remove signup token, we don't want users to come back with an old link
     self.user_model.delete_signup_token(user.get_id(), old_token)
     self.auth.unset_session()
-    
+
     params = {
       'message' : 'Password Updated ! Login with new password.'
     }
@@ -296,10 +291,8 @@ class LoginHandler(BaseHandler):
         message = 'Email ID not veridfied, Please contact admin'
         self._serve_page(message,True)
         return
-      elif v.type is 'admin':
+      else:
         self.redirect(self.uri_for('authenticated'))
-      else :
-        self.redirect('query/software')
     except (InvalidAuthIdError, InvalidPasswordError) as e:
       logging.info('Login failed for user %s because of %s', username, type(e))
       message = 'Invalid password'
@@ -317,7 +310,7 @@ class LoginHandler(BaseHandler):
       self.render_template('login.html', params)
     else:
       self.redirect(self.uri_for('authenticated'))
-        
+
 class LogoutHandler(BaseHandler):
   def get(self):
     self.auth.unset_session()
@@ -328,49 +321,6 @@ class AuthenticatedHandler(BaseHandler):
   @user_required
   def get(self):
     self.render_template('dashboard.html')
-
-class QueryHandler(BaseHandler):
-  @user_required
-  def get(self, *args, **kwargs):
-    tipe = kwargs['type']
-    if tipe == 'software':
-      params = {
-        'software' : True
-      } 
-      self.render_template('query.html',params)
-    elif tipe == 'training':
-      params = {
-        'training' : True
-      }
-      self.render_template('query.html',params)
-    elif tipe == 'use':
-      params = {
-       'Use': True
-      }
-      self.render_template('query.html',params)
-
-
-class UpdateHandler(BaseHandler):
-  @user_required
-  def get(self, *args, **kwargs):
-    tipe = kwargs['type']
-    if tipe == 'software':
-      params = {
-        'software' : True
-      } 
-      self.render_template('update.html',params)
-    elif tipe == 'training':
-      params = {
-        'training' : True
-      }
-      self.render_template('update.html',params)
-    elif tipe == 'use':
-      params = {
-       'Use': True
-      }
-      self.render_template('update.html',params)
-
-
 
 config = {
   'webapp2_extras.auth': {
@@ -391,9 +341,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/password', SetPasswordHandler),
     webapp2.Route('/logout', LogoutHandler, name='logout'),
     webapp2.Route('/forgot', ForgotPasswordHandler, name='forgot'),
-    webapp2.Route('/dashboard', AuthenticatedHandler, name='authenticated'),
-    webapp2.Route('/update/<type:software|training|use>', handler=UpdateHandler, name='update'),
-    webapp2.Route('/query/<type:software|training|use>', handler=QueryHandler, name='query')
+    webapp2.Route('/dashboard', AuthenticatedHandler, name='authenticated')
 ], debug=True, config=config)
 
 logging.getLogger().setLevel(logging.DEBUG)
