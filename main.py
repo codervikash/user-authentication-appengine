@@ -325,7 +325,6 @@ class AuthenticatedHandler(BaseHandler):
 config = {
   'webapp2_extras.auth': {
     'user_model': 'models.User',
-    'update_sofware': 'models.Software',
     'user_attributes': ['name']
   },
   'webapp2_extras.sessions': {
