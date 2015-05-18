@@ -115,6 +115,7 @@ class SignupHandler(BaseHandler):
         last_name=last_name, verified=False)
       if not user_data[0]: #user_data is a tuple
         message = 'Username/email already exists. please login or choose different username/email.'
+
         params = {
           'message' : message
         }
@@ -131,7 +132,7 @@ class SignupHandler(BaseHandler):
 
       email_id = email
 
-      mail.send_mail(sender="Software-DB Support <mailkumarvikash@gmail.com>",
+      mail.send_mail(sender= config['config']['admin'],
                 to=email_id,
                 subject="Approve account",
                 body="""
@@ -139,13 +140,12 @@ class SignupHandler(BaseHandler):
               Your sign up details are as follows:
               Name : %s
               Email Id : %s
-              Type : %s
               If its authorised, Please click on link below.
                %s
 
-               Else, please reply back to this mail with details.""" % (name, email, typef, verification_url))
+               Else, please reply back to this mail with details.""" % (name, email, verification_url))
 
-      message = 'Thanks for signing up. Please contact admin to verify account!'
+      message = 'Thanks for signing up. Please check your mail ccount!'
 
       params = {
         'message' : message
@@ -172,7 +172,7 @@ class ForgotPasswordHandler(BaseHandler):
     verification_url = self.uri_for('verification', type='p', user_id=user_id,
       signup_token=token, _full=True)
 
-    mail.send_mail(sender="Admin ID <xyz@example.com>",
+    mail.send_mail(sender = config['config']['admin'],
                 to=email,
                 subject="Password Change",
                 body="""
@@ -183,8 +183,10 @@ class ForgotPasswordHandler(BaseHandler):
 
                Else, please reply back to this mail with details.""" %  verification_url)
 
+    message = 'Check mail to verify password change and login again.'
+
     params = {
-      'message' : 'Check mail to verify password change and login again.'
+      'message' : message
     }
 
     self.render_template('login.html',params)
@@ -288,7 +290,7 @@ class LoginHandler(BaseHandler):
       v = self.user_model.get_by_auth_id(username)
       if v.verified is False:
         self.auth.unset_session()
-        message = 'Email ID not veridfied, Please contact admin'
+        message = 'Email ID not veridfied, Please check your mail'
         self._serve_page(message,True)
         return
       else:
@@ -325,10 +327,13 @@ class AuthenticatedHandler(BaseHandler):
 config = {
   'webapp2_extras.auth': {
     'user_model': 'models.User',
-    'user_attributes': ['name']
+    'user_attributes': ['name'],
   },
   'webapp2_extras.sessions': {
     'secret_key': 'YOUR_SECRET_KEY'
+  },
+  'config' : {
+  'admin' : 'mailkumarvikash@gmail.com'
   }
 }
 
