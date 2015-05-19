@@ -8,19 +8,10 @@ threadsafe: yes
 
 handlers:
 - url: /css
+  static_dir: /css
   mime_type: text/css
 
-
-- url: /signup
-  script: main.app
-
-- url: /login
-  script: main.app
-
-- url: /forgot
-  script: main.app
-
-- url: .*
+- url: /.*
   script: main.app
 
 
