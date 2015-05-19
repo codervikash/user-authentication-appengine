@@ -9,24 +9,19 @@ threadsafe: yes
 handlers:
 - url: /css
   mime_type: text/css
-  static_dir: css
 
 
 - url: /signup
   script: main.app
-  secure: always
 
 - url: /login
   script: main.app
-  secure: always
 
 - url: /forgot
   script: main.app
-  secure: always
 
 - url: .*
   script: main.app
-  secure: always
 
 
 libraries:
