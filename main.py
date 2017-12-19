@@ -333,7 +333,7 @@ config = {
     'secret_key': 'YOUR_SECRET_KEY'
   },
   'config' : {
-  'admin' : 'mailkumarvikash@gmail.com'
+  'admin' : '<admin_email_id>'
   }
 }
 
