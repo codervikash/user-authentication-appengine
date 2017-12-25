@@ -1,4 +1,4 @@
-# user-authentication-appengine
+# User Authentication - Google App Engine
 
 An inplementation of user authentication and management on Google App Engine. IT has featues to login, logout, reset password, session management. Sending mail for signup and reset is also implemented.
 
